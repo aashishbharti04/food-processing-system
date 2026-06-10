@@ -56,6 +56,8 @@ addopts = "-ra"
 line-length = 88
 target-version = "py310"
 src = ["src", "tests"]
+# The legacy/ directory archives the original, intentionally-flawed scripts.
+extend-exclude = ["legacy"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "C4"]
