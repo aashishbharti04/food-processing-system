@@ -36,6 +36,7 @@ It ships with **two interchangeable database backends**:
 - ✏️ **Update profile** — real `UPDATE` (the original mistakenly inserted duplicates).
 - ⭐ **Rate the service** — collect 1–5 ratings.
 - 🎨 **Modern terminal UI** — colours, banners, spinners (loading state), empty & error states, ASCII fallback for legacy consoles.
+- 🖥️ **Web admin dashboard** *(optional)* — Flask + Jinja management view with stat cards, a chart, customer/order tables, secure login (CSRF-protected), and dark/light mode. Reuses the exact same services and database.
 - 🔌 **Pluggable backends** — switch between SQLite and MySQL with one env var.
 - ✅ **Fully tested** — pytest suite that runs without any external services.
 - 📦 **Installable** — proper `pyproject.toml`, console entry point, type hints throughout.
@@ -119,6 +120,38 @@ You'll be greeted by the main menu:
    6. Rate us
 3. **Exit**
 
+## 🖥️ Web Admin Dashboard (optional)
+
+A modern, read-focused management view built with **Flask + Jinja**, reusing the
+same services and database as the CLI — no duplicated logic.
+
+**Features:** stat cards (customers, orders, revenue, average rating), a "top
+ordered items" chart, searchable customer & order tables, secure CSRF-protected
+admin login, responsive layout, and dark/light mode.
+
+```bash
+# Install the web extra
+pip install -e ".[web]"
+
+# Configure (a strong secret + admin password are recommended)
+export FLASK_SECRET_KEY="$(python -c 'import secrets;print(secrets.token_hex(32))')"
+export ADMIN_PASSWORD="your-strong-password"
+
+# Run it
+food-processing-dashboard           # or: python -m food_processing_system.web
+# ➜ http://127.0.0.1:5000
+```
+
+Out of the box (no env set) you can log in with the demo credentials
+**`admin` / `admin123`**; the dashboard shows an insecure-defaults warning until
+you set `FLASK_SECRET_KEY` and `ADMIN_PASSWORD`.
+
+> **Screenshots:** add `assets/dashboard-login.png` and `assets/dashboard.png`
+> and they'll show here.
+> <!-- ![Login](assets/dashboard-login.png) ![Dashboard](assets/dashboard.png) -->
+
+For production, run it behind a WSGI server — see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
 ## ⚙️ Configuration Guide
 
 All configuration is read from **environment variables** (or an optional `.env` file).
@@ -138,6 +171,11 @@ cp .env.example .env
 | `DB_PASSWORD` | _(empty)_   | MySQL password                                |
 | `DB_NAME`     | `food`      | MySQL database name                           |
 | `NO_COLOR`    | `0`         | Set to `1` to disable coloured output         |
+| `FLASK_SECRET_KEY` | _(dev default)_ | Secret key for the web dashboard sessions |
+| `ADMIN_USERNAME`   | `admin`     | Dashboard login username                  |
+| `ADMIN_PASSWORD`   | `admin123`  | Dashboard login password                  |
+| `WEB_HOST`         | `127.0.0.1` | Dashboard bind host                       |
+| `WEB_PORT`         | `5000`      | Dashboard port                            |
 
 ### Using MySQL
 

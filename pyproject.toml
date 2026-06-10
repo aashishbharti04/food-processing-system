@@ -27,11 +27,13 @@ dependencies = []
 [project.optional-dependencies]
 mysql = ["mysql-connector-python>=8.0"]
 dotenv = ["python-dotenv>=1.0"]
+web = ["flask>=3.0"]
 dev = [
     "pytest>=7.4",
     "pytest-cov>=4.1",
     "ruff>=0.4",
     "mypy>=1.8",
+    "flask>=3.0",
 ]
 
 [project.urls]
@@ -41,12 +43,14 @@ Issues = "https://github.com/aashishbharti04/food-processing-system/issues"
 
 [project.scripts]
 food-processing-system = "food_processing_system.cli:main"
+food-processing-dashboard = "food_processing_system.web.app:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 food_processing_system = ["schema.sql"]
+"food_processing_system.web" = ["templates/*.html", "templates/**/*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

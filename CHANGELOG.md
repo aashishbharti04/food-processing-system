@@ -5,6 +5,22 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Optional web admin dashboard** (`food_processing_system.web`, Flask + Jinja):
+  - Overview with stat cards (customers, orders, revenue, average rating) and a
+    "top ordered items" chart.
+  - Searchable customer and order tables.
+  - Secure, CSRF-protected admin login with constant-time credential comparison
+    and hardened session cookies (`HttpOnly`, `SameSite=Lax`).
+  - Responsive layout with dark/light mode; empty and error states.
+  - Reuses the existing service/repository layers — no business logic duplicated.
+- `food-processing-dashboard` console script and `python -m food_processing_system.web`.
+- `web` install extra (`pip install -e ".[web]"`) and web configuration in
+  `config.WebConfig` / `.env.example`.
+- Six web tests (`tests/test_web.py`) covering auth, CSRF and page rendering.
+
 ## [1.0.0] - 2026-06-10
 
 The first production-ready release. The original single-file script was refactored

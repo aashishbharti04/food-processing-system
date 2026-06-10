@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block heading %}Overview{% endblock %}
+
+{% block content %}
+{% set card = 'rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm' %}
+
+<!-- Stat cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="{{ card }}">
+    <p class="text-sm text-slate-500 dark:text-slate-400">Customers</p>
+    <p class="mt-2 text-3xl font-extrabold tracking-tight">{{ stats.customers }}</p>
+    <span class="mt-1 inline-block text-xs text-slate-400">👥 registered</span>
+  </div>
+  <div class="{{ card }}">
+    <p class="text-sm text-slate-500 dark:text-slate-400">Orders</p>
+    <p class="mt-2 text-3xl font-extrabold tracking-tight">{{ stats.orders }}</p>
+    <span class="mt-1 inline-block text-xs text-slate-400">🧾 placed</span>
+  </div>
+  <div class="{{ card }}">
+    <p class="text-sm text-slate-500 dark:text-slate-400">Revenue</p>
+    <p class="mt-2 text-3xl font-extrabold tracking-tight">₹{{ stats.revenue }}</p>
+    <span class="mt-1 inline-block text-xs text-slate-400">💰 total</span>
+  </div>
+  <div class="{{ card }}">
+    <p class="text-sm text-slate-500 dark:text-slate-400">Avg. rating</p>
+    <p class="mt-2 text-3xl font-extrabold tracking-tight">{{ stats.avg_rating }}<span class="text-amber-500 text-xl"> ★</span></p>
+    <span class="mt-1 inline-block text-xs text-slate-400">out of 5</span>
+  </div>
+</div>
+
+<div class="grid lg:grid-cols-5 gap-4 mt-6">
+  <!-- Chart -->
+  <div class="{{ card }} lg:col-span-3">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-semibold">Top ordered items</h2>
+      <span class="text-xs text-slate-400">by count</span>
+    </div>
+    {% if chart_values %}
+    <canvas id="ordersChart" height="140"></canvas>
+    {% else %}
+    <div class="py-12 text-center text-slate-400">
+      <div class="text-4xl mb-2">🍽️</div>
+      <p class="text-sm">No orders yet — data will appear here once orders are placed.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Recent orders -->
+  <div class="{{ card }} lg:col-span-2">
+    <h2 class="font-semibold mb-4">Recent orders</h2>
+    {% if recent %}
+    <ul class="divide-y divide-slate-100 dark:divide-slate-800">
+      {% for o in recent %}
+      <li class="flex items-center justify-between py-2.5">
+        <div>
+          <p class="font-medium text-sm">{{ o.food_name }}</p>
+          <p class="text-xs text-slate-400">{{ o.customer_name }} · #{{ o.account_no }}</p>
+        </div>
+        <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">₹{{ '%.2f'|format(o.price) }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="py-10 text-center text-slate-400">
+      <div class="text-3xl mb-2">📭</div>
+      <p class="text-sm">No recent orders.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if chart_values %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+  const ctx = document.getElementById('ordersChart');
+  const dark = document.documentElement.classList.contains('dark');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ chart_labels|tojson }},
+      datasets: [{
+        label: 'Orders',
+        data: {{ chart_values|tojson }},
+        backgroundColor: 'rgba(245, 158, 11, 0.8)',
+        borderRadius: 8,
+        maxBarThickness: 48,
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: dark ? '#94a3b8' : '#64748b' } },
+        y: { beginAtZero: true, ticks: { precision: 0, color: dark ? '#94a3b8' : '#64748b' },
+             grid: { color: dark ? 'rgba(148,163,184,.1)' : 'rgba(100,116,139,.12)' } },
+      },
+    },
+  });
+</script>
+{% endif %}
+{% endblock %}

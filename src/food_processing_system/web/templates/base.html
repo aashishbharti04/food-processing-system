@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Admin dashboard for the Food Processing System — manage customers, orders and ratings." />
+  <title>{% block title %}Dashboard{% endblock %} · Food Processing System</title>
+
+  <!-- Apply the saved theme before paint to avoid a flash. -->
+  <script>
+    (function () {
+      const t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: rgba(120,120,120,.4); border-radius: 9999px; }
+  </style>
+</head>
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 antialiased">
+{% if session.get('logged_in') %}
+<div class="flex min-h-full flex-col lg:flex-row">
+
+  <!-- Sidebar / topbar -->
+  <aside class="lg:w-64 lg:fixed lg:inset-y-0 bg-white dark:bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800">
+    <div class="flex items-center justify-between gap-2 px-5 h-16 lg:border-b border-slate-200 dark:border-slate-800">
+      <a href="{{ url_for('dashboard') }}" class="flex items-center gap-2 font-extrabold text-lg">
+        <span class="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-orange-500/30">🍔</span>
+        <span class="tracking-tight">Food<span class="text-amber-500">Admin</span></span>
+      </a>
+      <button id="navToggle" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Toggle menu">☰</button>
+    </div>
+    <nav id="navLinks" class="hidden lg:block p-3 space-y-1">
+      {% set item = 'flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition' %}
+      {% set on = 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' %}
+      {% set off = 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800' %}
+      <a href="{{ url_for('dashboard') }}" class="{{ item }} {{ on if active=='dashboard' else off }}">📊 Overview</a>
+      <a href="{{ url_for('customers') }}" class="{{ item }} {{ on if active=='customers' else off }}">👥 Customers</a>
+      <a href="{{ url_for('orders') }}" class="{{ item }} {{ on if active=='orders' else off }}">🧾 Orders</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1 lg:pl-64 flex flex-col min-h-full">
+    <header class="sticky top-0 z-10 h-16 flex items-center justify-between gap-4 px-5 lg:px-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-800">
+      <h1 class="text-base lg:text-lg font-semibold tracking-tight">{% block heading %}Overview{% endblock %}</h1>
+      <div class="flex items-center gap-2">
+        <button id="themeToggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Toggle theme">
+          <span class="hidden dark:inline">☀️</span><span class="dark:hidden">🌙</span>
+        </button>
+        <form action="{{ url_for('logout') }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button class="px-3 py-2 text-sm font-medium rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700">Log out</button>
+        </form>
+      </div>
+    </header>
+
+    {% if insecure_defaults %}
+    <div class="px-5 lg:px-8 pt-4">
+      <div class="rounded-xl bg-amber-100 text-amber-900 dark:bg-amber-500/15 dark:text-amber-300 px-4 py-3 text-sm">
+        ⚠ <b>Insecure defaults in use.</b> Set <code>FLASK_SECRET_KEY</code> and <code>ADMIN_PASSWORD</code> before deploying.
+      </div>
+    </div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="px-5 lg:px-8 pt-4 space-y-2">
+        {% for category, message in messages %}
+        <div class="rounded-xl px-4 py-3 text-sm {{ 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300' if category=='error' else 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300' }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="flex-1 px-5 lg:px-8 py-6">{% block content %}{% endblock %}</main>
+
+    {% include "partials/footer.html" %}
+  </div>
+</div>
+{% else %}
+  {% block fullpage %}{% endblock %}
+{% endif %}
+
+<script>
+  document.getElementById('themeToggle')?.addEventListener('click', function () {
+    const root = document.documentElement;
+    root.classList.toggle('dark');
+    localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+  });
+  document.getElementById('navToggle')?.addEventListener('click', function () {
+    document.getElementById('navLinks')?.classList.toggle('hidden');
+  });
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

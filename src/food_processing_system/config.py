@@ -60,6 +60,41 @@ class DatabaseConfig:
 
 
 @dataclass(frozen=True)
+class WebConfig:
+    """Configuration for the optional web admin dashboard.
+
+    Defaults let you run the dashboard immediately (log in with ``admin`` /
+    ``admin123``), but the app shows an insecure-defaults warning until you set
+    ``FLASK_SECRET_KEY`` and ``ADMIN_PASSWORD`` to your own values.
+    """
+
+    secret_key: str = "dev-insecure-change-me"
+    admin_username: str = "admin"
+    admin_password: str = "admin123"
+    host: str = "127.0.0.1"
+    port: int = 5000
+
+    @property
+    def using_insecure_defaults(self) -> bool:
+        """Whether the secret key or admin password is still a built-in default."""
+        return (
+            self.secret_key == "dev-insecure-change-me"
+            or self.admin_password == "admin123"
+        )
+
+    @classmethod
+    def from_env(cls) -> WebConfig:
+        """Build the web configuration from the current environment."""
+        return cls(
+            secret_key=os.getenv("FLASK_SECRET_KEY", "dev-insecure-change-me"),
+            admin_username=os.getenv("ADMIN_USERNAME", "admin"),
+            admin_password=os.getenv("ADMIN_PASSWORD", "admin123"),
+            host=os.getenv("WEB_HOST", "127.0.0.1"),
+            port=int(os.getenv("WEB_PORT", "5000")),
+        )
+
+
+@dataclass(frozen=True)
 class AppConfig:
     """Top-level application configuration."""
 

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Error {{ code }}{% endblock %}
+{% block heading %}Error{% endblock %}
+
+{% block fullpage %}
+<div class="min-h-screen grid place-items-center p-6 bg-slate-50 dark:bg-slate-950">
+  <div class="text-center">
+    <p class="text-7xl font-extrabold text-amber-500">{{ code }}</p>
+    <p class="mt-2 text-lg font-semibold">{{ message }}</p>
+    <a href="{{ url_for('dashboard') }}" class="mt-6 inline-block rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold px-5 py-2.5 shadow-lg shadow-orange-500/30">Back to dashboard</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-12 text-center shadow-sm">
+  <p class="text-7xl font-extrabold text-amber-500">{{ code }}</p>
+  <p class="mt-2 text-lg font-semibold">{{ message }}</p>
+  <a href="{{ url_for('dashboard') }}" class="mt-6 inline-block rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold px-5 py-2.5 shadow-lg shadow-orange-500/30">Back to dashboard</a>
+</div>
+{% endblock %}

@@ -28,6 +28,10 @@ ENV/
 *.sqlite
 *.sqlite3
 food.db
+demo.db
+
+# Claude Code local config (machine-specific launch settings)
+.claude/
 
 # Test & coverage artifacts
 .pytest_cache/

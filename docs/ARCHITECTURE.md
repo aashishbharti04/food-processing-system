@@ -27,7 +27,18 @@ testable, swappable, and easy to reason about.
 
          supporting modules:
          config.py · models.py · security.py · ui.py · schema.sql
+
+┌────────────────────────────────────────────────┐
+│        web/  (optional Flask dashboard)         │  Alternative front-end
+│  reuses services + repositories + database      │  ──────────────────────►
+└────────────────────────────────────────────────┘   (no logic duplicated)
 ```
+
+The optional **web dashboard** (`web/`) is a second presentation layer. It plugs
+into the *same* services and repositories the CLI uses, which is the whole point
+of the layered design — business logic is written once and consumed by both the
+terminal and the browser. The dashboard adds only web concerns: routing, session
+auth, CSRF protection, and HTML templates.
 
 ## Layer responsibilities
 

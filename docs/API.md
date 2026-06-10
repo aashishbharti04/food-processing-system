@@ -78,6 +78,26 @@ Order(id: int, food_name: str, price: Decimal, address: str,
 Rating(id: int, account_no: int, score: int)
 ```
 
+## Web dashboard (`web`)
+
+The optional dashboard exposes a standard Flask app factory, so it works with any
+WSGI server:
+
+```python
+from food_processing_system.web import create_app
+
+app = create_app()          # reads config from the environment
+# gunicorn "food_processing_system.web:create_app()" --bind 0.0.0.0:8000
+```
+
+| Route        | Method   | Auth | Description                              |
+|--------------|----------|------|------------------------------------------|
+| `/login`     | GET/POST | —    | Admin login (CSRF-protected form).       |
+| `/logout`    | POST     | ✓    | Clear the session (CSRF-protected).      |
+| `/`          | GET      | ✓    | Overview: stats, chart, recent orders.   |
+| `/customers` | GET      | ✓    | Customer table (supports `?q=` search).  |
+| `/orders`    | GET      | ✓    | Order table (supports `?q=` search).     |
+
 ## Exceptions (`services`)
 
 ```

@@ -66,13 +66,36 @@ export DB_BACKEND=mysql DB_USER=root DB_PASSWORD=secret DB_NAME=food
 food-processing-system
 ```
 
-## 5. Environment checklist
+## 5. Deploying the web admin dashboard
+
+The dashboard ships a Flask app factory (`food_processing_system.web:create_app`).
+The bundled `food-processing-dashboard` command runs Flask's **development** server
+— fine for local use, but in production run it behind a WSGI server:
+
+```bash
+pip install "food-processing-system[web]" gunicorn
+
+export FLASK_SECRET_KEY="$(python -c 'import secrets;print(secrets.token_hex(32))')"
+export ADMIN_USERNAME=admin
+export ADMIN_PASSWORD="a-strong-password"
+export DB_BACKEND=mysql DB_USER=food_app DB_PASSWORD=... DB_NAME=food
+
+gunicorn "food_processing_system.web:create_app()" --bind 0.0.0.0:8000 --workers 3
+```
+
+Always terminate TLS in front of it (a reverse proxy such as Nginx/Caddy), and
+**never** ship the default `FLASK_SECRET_KEY` or `ADMIN_PASSWORD` — the dashboard
+shows an insecure-defaults banner until both are set.
+
+## 6. Environment checklist
 
 - [ ] `DB_BACKEND` set correctly (`sqlite` or `mysql`).
 - [ ] MySQL credentials provided via env/secret manager — **never** committed.
 - [ ] Database created and reachable from the host.
 - [ ] App installed with the `[mysql]` extra when using MySQL.
 - [ ] `.env` is present locally and listed in `.gitignore` (it is by default).
+- [ ] (Dashboard) `FLASK_SECRET_KEY` and `ADMIN_PASSWORD` set to strong values.
+- [ ] (Dashboard) Served behind a WSGI server + TLS, not the dev server.
 
 ## Notes
 

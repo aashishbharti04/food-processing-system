@@ -14,13 +14,26 @@ food-processing-system/
 │       ├── services.py                # Business logic & validation
 │       ├── models.py                  # Typed domain models (Customer/Order/Rating)
 │       ├── security.py                # PBKDF2 password hashing
-│       └── schema.sql                 # Canonical database schema
+│       ├── schema.sql                 # Canonical database schema
+│       └── web/                       # Optional Flask admin dashboard
+│           ├── __init__.py            # create_app factory export
+│           ├── __main__.py            # `python -m food_processing_system.web`
+│           ├── app.py                 # Factory, routes, auth, CSRF
+│           └── templates/             # Jinja templates (base, login,
+│               ├── base.html          #   dashboard, customers, orders, error)
+│               ├── login.html
+│               ├── dashboard.html
+│               ├── customers.html
+│               ├── orders.html
+│               ├── error.html
+│               └── partials/footer.html
 │
 ├── tests/                             # Pytest suite (runs on in-memory SQLite)
 │   ├── conftest.py                    # Shared fixtures
 │   ├── test_database.py               # DB abstraction + injection-safety tests
 │   ├── test_security.py               # Password hashing tests
-│   └── test_services.py               # Business-logic tests
+│   ├── test_services.py               # Business-logic tests
+│   └── test_web.py                    # Flask dashboard: auth, CSRF, pages
 │
 ├── docs/                              # Project documentation
 │   ├── ARCHITECTURE.md
