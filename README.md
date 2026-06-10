@@ -46,6 +46,20 @@ It ships with **two interchangeable database backends**:
 
 ## 🖼️ Screenshots
 
+### Admin dashboard
+
+![Admin dashboard](assets/admin-dashboard.png)
+
+### Customer dashboard
+
+![Customer dashboard](assets/customer-dashboard.png)
+
+### Customer landing page
+
+![Customer landing page](assets/home.png)
+
+### Command-line interface
+
 > Terminal preview of the main menu and order flow.
 
 ```text
@@ -154,9 +168,8 @@ you can log in with the demo credentials **`admin` / `admin123`**; the dashboard
 shows an insecure-defaults warning until you set `FLASK_SECRET_KEY` and
 `ADMIN_PASSWORD`.
 
-> **Screenshots:** add `assets/home.png`, `assets/dashboard.png` and
-> `assets/admin.png` and they'll show here.
-> <!-- ![Home](assets/home.png) ![Customer dashboard](assets/dashboard.png) ![Admin](assets/admin.png) -->
+See the [Screenshots](#️-screenshots) section above for the admin dashboard,
+customer dashboard, and landing page.
 
 For production, run it behind a WSGI server — see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
