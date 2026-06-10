@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & Discussions
+    url: https://github.com/aashishbharti04/food-processing-system/discussions
+    about: Ask questions and discuss ideas with the community.
+  - name: 📧 Email the maintainer
+    url: mailto:aashish@marketdoctorsonline.com
+    about: For private or security-related matters.

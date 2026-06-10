@@ -1,0 +1,11 @@
+# Runtime dependencies.
+#
+# The application runs out of the box with no third-party packages (SQLite
+# backend, stdlib-only password hashing). The entries below are OPTIONAL and
+# only needed for specific features:
+
+# Production MySQL backend (DB_BACKEND=mysql):
+mysql-connector-python>=8.0
+
+# Loading configuration from a local .env file:
+python-dotenv>=1.0

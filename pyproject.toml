@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "food-processing-system"
+version = "1.0.0"
+description = "A clean, production-ready CLI for managing customer accounts and food orders (MySQL / SQLite)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Aashish Bharti", email = "aashish@marketdoctorsonline.com" }]
+keywords = ["cli", "food", "orders", "mysql", "sqlite", "management"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business",
+]
+dependencies = []
+
+[project.optional-dependencies]
+mysql = ["mysql-connector-python>=8.0"]
+dotenv = ["python-dotenv>=1.0"]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "mypy>=1.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/aashishbharti04/food-processing-system"
+Repository = "https://github.com/aashishbharti04/food-processing-system"
+Issues = "https://github.com/aashishbharti04/food-processing-system/issues"
+
+[project.scripts]
+food-processing-system = "food_processing_system.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+food_processing_system = ["schema.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "C4"]
+
+[tool.mypy]
+python_version = "3.10"
+packages = ["food_processing_system"]
+mypy_path = "src"
+ignore_missing_imports = true
