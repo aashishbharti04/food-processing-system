@@ -36,7 +36,10 @@ It ships with **two interchangeable database backends**:
 - ✏️ **Update profile** — real `UPDATE` (the original mistakenly inserted duplicates).
 - ⭐ **Rate the service** — collect 1–5 ratings.
 - 🎨 **Modern terminal UI** — colours, banners, spinners (loading state), empty & error states, ASCII fallback for legacy consoles.
-- 🖥️ **Web admin dashboard** *(optional)* — Flask + Jinja management view with stat cards, a chart, customer/order tables, secure login (CSRF-protected), and dark/light mode. Reuses the exact same services and database.
+- 🖥️ **Web app** *(optional)* — Flask + Jinja, two faces sharing the same services:
+  a **customer app** (register, log in, order, view your orders, rate) at `/` and an
+  **admin dashboard** (stats, chart, customer/order tables) at `/admin`. CSRF-protected
+  auth, responsive, dark/light mode.
 - 🔌 **Pluggable backends** — switch between SQLite and MySQL with one env var.
 - ✅ **Fully tested** — pytest suite that runs without any external services.
 - 📦 **Installable** — proper `pyproject.toml`, console entry point, type hints throughout.
@@ -120,14 +123,17 @@ You'll be greeted by the main menu:
    6. Rate us
 3. **Exit**
 
-## 🖥️ Web Admin Dashboard (optional)
+## 🖥️ Web App (optional)
 
-A modern, read-focused management view built with **Flask + Jinja**, reusing the
-same services and database as the CLI — no duplicated logic.
+A modern web layer built with **Flask + Jinja**, reusing the same services and
+database as the CLI — no duplicated logic. It serves two areas from one process:
 
-**Features:** stat cards (customers, orders, revenue, average rating), a "top
-ordered items" chart, searchable customer & order tables, secure CSRF-protected
-admin login, responsive layout, and dark/light mode.
+| Area | URL | Who | What |
+|------|-----|-----|------|
+| **Customer app** | `/` | Customers | Register, log in, place orders, view *your* orders, rate the service. |
+| **Admin dashboard** | `/admin` | Administrators | Stat cards (customers, orders, revenue, avg rating), a "top ordered items" chart, searchable customer & order tables. |
+
+Both feature CSRF-protected auth, responsive layouts, dark/light mode, and empty/error states.
 
 ```bash
 # Install the web extra
@@ -137,18 +143,20 @@ pip install -e ".[web]"
 export FLASK_SECRET_KEY="$(python -c 'import secrets;print(secrets.token_hex(32))')"
 export ADMIN_PASSWORD="your-strong-password"
 
-# Run it
+# Run it (serves the customer app and the admin dashboard)
 food-processing-dashboard           # or: python -m food_processing_system.web
-# ➜ http://127.0.0.1:5000
+# ➜ Customer app:    http://127.0.0.1:5000/
+# ➜ Admin dashboard: http://127.0.0.1:5000/admin
 ```
 
-Out of the box (no env set) you can log in with the demo credentials
-**`admin` / `admin123`**; the dashboard shows an insecure-defaults warning until
-you set `FLASK_SECRET_KEY` and `ADMIN_PASSWORD`.
+Customers sign up via the web form. For the admin area, out of the box (no env set)
+you can log in with the demo credentials **`admin` / `admin123`**; the dashboard
+shows an insecure-defaults warning until you set `FLASK_SECRET_KEY` and
+`ADMIN_PASSWORD`.
 
-> **Screenshots:** add `assets/dashboard-login.png` and `assets/dashboard.png`
-> and they'll show here.
-> <!-- ![Login](assets/dashboard-login.png) ![Dashboard](assets/dashboard.png) -->
+> **Screenshots:** add `assets/home.png`, `assets/dashboard.png` and
+> `assets/admin.png` and they'll show here.
+> <!-- ![Home](assets/home.png) ![Customer dashboard](assets/dashboard.png) ![Admin](assets/admin.png) -->
 
 For production, run it behind a WSGI server — see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 

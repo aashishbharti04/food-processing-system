@@ -1,0 +1,9 @@
+{# Full-bleed layout for public pages (home, login, register, errors). #}
+{% extends "base.html" %}
+
+{% block body %}
+<button id="themeToggle" class="fixed top-4 right-4 z-20 p-2 rounded-lg bg-white/70 dark:bg-slate-800/70 backdrop-blur hover:bg-white dark:hover:bg-slate-700" aria-label="Toggle theme">
+  <span class="hidden dark:inline">☀️</span><span class="dark:hidden">🌙</span>
+</button>
+{% block content %}{% endblock %}
+{% endblock %}

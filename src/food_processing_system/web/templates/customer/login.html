@@ -1,0 +1,40 @@
+{% extends "layouts/plain.html" %}
+{% block title %}Log in · Food Processing System{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-950">
+  <div class="w-full max-w-md">
+    <a href="{{ url_for('customer.home') }}" class="flex items-center gap-2 font-extrabold text-xl mb-8 justify-center">
+      <span class="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white">🍔</span>
+      Food<span class="text-amber-500">Order</span>
+    </a>
+    <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-8">
+      <h1 class="text-2xl font-bold tracking-tight">Welcome back</h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-1 mb-6 text-sm">Log in to order your food.</p>
+
+      {% include "partials/auth_flashes.html" %}
+
+      <form method="post" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        {% set field = 'w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500' %}
+        <div>
+          <label for="name" class="block text-sm font-medium mb-1.5">Full name</label>
+          <input id="name" name="name" required autofocus class="{{ field }}" />
+        </div>
+        <div>
+          <label for="account_no" class="block text-sm font-medium mb-1.5">Account number</label>
+          <input id="account_no" name="account_no" inputmode="numeric" required class="{{ field }}" />
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium mb-1.5">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required class="{{ field }}" />
+        </div>
+        <button class="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold py-2.5 shadow-lg shadow-orange-500/30 hover:opacity-95 transition">Log in</button>
+      </form>
+      <p class="mt-6 text-sm text-center text-slate-500 dark:text-slate-400">
+        New here? <a href="{{ url_for('customer.register') }}" class="text-amber-600 font-medium hover:underline">Create an account</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

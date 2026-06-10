@@ -1,30 +1,24 @@
-{% extends "base.html" %}
-{% block title %}Sign in{% endblock %}
+{% extends "layouts/plain.html" %}
+{% block title %}Admin sign in{% endblock %}
 
-{% block fullpage %}
+{% block content %}
 <div class="min-h-screen grid lg:grid-cols-2">
-  <!-- Brand panel -->
-  <div class="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-amber-500 via-orange-600 to-rose-600 text-white">
+  <div class="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-slate-800 via-slate-900 to-black text-white">
     <div class="flex items-center gap-3 font-extrabold text-2xl">
-      <span class="grid place-items-center w-12 h-12 rounded-2xl bg-white/20 backdrop-blur">🍔</span>
-      Food Processing System
+      <span class="grid place-items-center w-12 h-12 rounded-2xl bg-white/15 backdrop-blur">🍔</span>
+      Food<span class="text-amber-400">Admin</span>
     </div>
     <div>
       <h2 class="text-4xl font-extrabold leading-tight">Admin Dashboard</h2>
-      <p class="mt-4 text-white/80 max-w-md">Manage customers, track orders and monitor ratings — all in one clean, modern view.</p>
+      <p class="mt-4 text-white/70 max-w-md">Manage customers, track orders and monitor ratings.</p>
     </div>
-    <p class="text-white/70 text-sm">© Food Processing System. Open source.</p>
+    <a href="{{ url_for('customer.home') }}" class="text-white/60 text-sm hover:text-white">← Back to the customer site</a>
   </div>
 
-  <!-- Form panel -->
   <div class="flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-950">
     <div class="w-full max-w-sm">
-      <div class="lg:hidden flex items-center gap-2 font-extrabold text-xl mb-8 justify-center">
-        <span class="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white">🍔</span>
-        Food<span class="text-amber-500">Admin</span>
-      </div>
-      <h1 class="text-2xl font-bold tracking-tight">Welcome back</h1>
-      <p class="text-slate-500 dark:text-slate-400 mt-1 mb-6 text-sm">Sign in to the admin dashboard.</p>
+      <h1 class="text-2xl font-bold tracking-tight">Admin sign in</h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-1 mb-6 text-sm">Restricted to administrators.</p>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
@@ -44,9 +38,7 @@
           <input id="password" name="password" type="password" autocomplete="current-password" required
                  class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
         </div>
-        <button class="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold py-2.5 shadow-lg shadow-orange-500/30 hover:opacity-95 transition">
-          Sign in
-        </button>
+        <button class="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold py-2.5 shadow-lg shadow-orange-500/30 hover:opacity-95 transition">Sign in</button>
       </form>
 
       {% if insecure_defaults %}

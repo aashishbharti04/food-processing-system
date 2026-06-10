@@ -78,9 +78,9 @@ Order(id: int, food_name: str, price: Decimal, address: str,
 Rating(id: int, account_no: int, score: int)
 ```
 
-## Web dashboard (`web`)
+## Web layer (`web`)
 
-The optional dashboard exposes a standard Flask app factory, so it works with any
+The optional web layer exposes a standard Flask app factory, so it works with any
 WSGI server:
 
 ```python
@@ -90,13 +90,30 @@ app = create_app()          # reads config from the environment
 # gunicorn "food_processing_system.web:create_app()" --bind 0.0.0.0:8000
 ```
 
-| Route        | Method   | Auth | Description                              |
-|--------------|----------|------|------------------------------------------|
-| `/login`     | GET/POST | —    | Admin login (CSRF-protected form).       |
-| `/logout`    | POST     | ✓    | Clear the session (CSRF-protected).      |
-| `/`          | GET      | ✓    | Overview: stats, chart, recent orders.   |
-| `/customers` | GET      | ✓    | Customer table (supports `?q=` search).  |
-| `/orders`    | GET      | ✓    | Order table (supports `?q=` search).     |
+**Customer app** (`customer` blueprint, mounted at `/`):
+
+| Route        | Method   | Auth | Description                                |
+|--------------|----------|------|--------------------------------------------|
+| `/`          | GET      | —    | Landing page (redirects to dashboard if logged in). |
+| `/register`  | GET/POST | —    | Create an account (CSRF-protected).        |
+| `/login`     | GET/POST | —    | Customer login (name + account no + password). |
+| `/logout`    | POST     | 👤   | Clear the customer session (CSRF-protected). |
+| `/dashboard` | GET      | 👤   | Customer overview: stats + recent orders.  |
+| `/order`     | GET/POST | 👤   | Place a new order.                         |
+| `/my-orders` | GET      | 👤   | The logged-in customer's orders.           |
+| `/rate`      | GET/POST | 👤   | Submit a 1–5 star rating.                  |
+
+**Admin dashboard** (`admin` blueprint, mounted at `/admin`):
+
+| Route              | Method   | Auth | Description                            |
+|--------------------|----------|------|----------------------------------------|
+| `/admin/login`     | GET/POST | —    | Admin login (CSRF-protected form).     |
+| `/admin/logout`    | POST     | 🔑   | Clear the admin session.               |
+| `/admin/`          | GET      | 🔑   | Overview: stats, chart, recent orders. |
+| `/admin/customers` | GET      | 🔑   | Customer table (supports `?q=`).       |
+| `/admin/orders`    | GET      | 🔑   | Order table (supports `?q=`).          |
+
+(👤 = customer session · 🔑 = admin session)
 
 ## Exceptions (`services`)
 

@@ -1,0 +1,61 @@
+{% extends "layouts/shell.html" %}
+{% block title %}Dashboard · Food Processing System{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+
+{% block content %}
+{% set card = 'rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm' %}
+
+<!-- Welcome + quick actions -->
+<div class="rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 text-white p-6 shadow-lg shadow-orange-500/20">
+  <p class="text-white/80 text-sm">Welcome back</p>
+  <h2 class="text-2xl font-extrabold tracking-tight">{{ me.name if me else 'Guest' }}</h2>
+  <div class="mt-4 flex flex-wrap gap-3">
+    <a href="{{ url_for('customer.order') }}" class="rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur font-semibold px-4 py-2 text-sm transition">🍔 Order food</a>
+    <a href="{{ url_for('customer.my_orders') }}" class="rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur font-semibold px-4 py-2 text-sm transition">🧾 My orders</a>
+    <a href="{{ url_for('customer.rate') }}" class="rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur font-semibold px-4 py-2 text-sm transition">⭐ Rate us</a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+  <div class="{{ card }}">
+    <p class="text-sm text-slate-500 dark:text-slate-400">My orders</p>
+    <p class="mt-2 text-3xl font-extrabold tracking-tight">{{ stats.orders }}</p>
+  </div>
+  <div class="{{ card }}">
+    <p class="text-sm text-slate-500 dark:text-slate-400">Total spent</p>
+    <p class="mt-2 text-3xl font-extrabold tracking-tight">₹{{ stats.spent }}</p>
+  </div>
+  <div class="{{ card }} col-span-2 lg:col-span-1">
+    <p class="text-sm text-slate-500 dark:text-slate-400">Last ordered</p>
+    <p class="mt-2 text-xl font-bold tracking-tight truncate">{{ stats.last }}</p>
+  </div>
+</div>
+
+<!-- Recent -->
+<div class="{{ card }} mt-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-semibold">Recent orders</h2>
+    <a href="{{ url_for('customer.my_orders') }}" class="text-sm text-amber-600 hover:underline">View all</a>
+  </div>
+  {% if recent %}
+  <ul class="divide-y divide-slate-100 dark:divide-slate-800">
+    {% for o in recent %}
+    <li class="flex items-center justify-between py-2.5">
+      <div>
+        <p class="font-medium text-sm">{{ o.food_name }}</p>
+        <p class="text-xs text-slate-400">Order #{{ o.id }}</p>
+      </div>
+      <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">₹{{ '%.2f'|format(o.price) }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="py-10 text-center text-slate-400">
+    <div class="text-3xl mb-2">🍽️</div>
+    <p class="text-sm">No orders yet.</p>
+    <a href="{{ url_for('customer.order') }}" class="mt-3 inline-block text-amber-600 font-medium hover:underline">Place your first order →</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

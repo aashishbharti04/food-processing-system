@@ -34,11 +34,22 @@ testable, swappable, and easy to reason about.
 └────────────────────────────────────────────────┘   (no logic duplicated)
 ```
 
-The optional **web dashboard** (`web/`) is a second presentation layer. It plugs
-into the *same* services and repositories the CLI uses, which is the whole point
-of the layered design — business logic is written once and consumed by both the
-terminal and the browser. The dashboard adds only web concerns: routing, session
-auth, CSRF protection, and HTML templates.
+The optional **web layer** (`web/`) is a second presentation layer. It plugs into
+the *same* services and repositories the CLI uses, which is the whole point of the
+layered design — business logic is written once and consumed by the terminal and
+the browser alike. The web layer adds only web concerns: routing, session auth,
+CSRF protection, and HTML templates.
+
+It is split into two Flask **blueprints** that share helpers in `web/common.py`:
+
+* `web/customer.py` — the **customer app** at `/` (register, login, order, view
+  orders, rate), authenticated by a `customer_account` session.
+* `web/admin.py` — the **admin dashboard** at `/admin` (stats, chart, tables),
+  authenticated by an `admin` session.
+
+Templates use two shared layouts — `layouts/shell.html` for authenticated pages
+(sidebar + topbar) and `layouts/plain.html` for public pages (login, register,
+landing) — both extending a common `base.html`.
 
 ## Layer responsibilities
 

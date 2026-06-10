@@ -1,0 +1,5 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+  <div class="mb-4 rounded-xl px-4 py-3 text-sm {{ 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300' if category=='error' else 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300' }}">{{ message }}</div>
+  {% endfor %}
+{% endwith %}

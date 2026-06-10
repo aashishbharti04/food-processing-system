@@ -8,18 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Optional web admin dashboard** (`food_processing_system.web`, Flask + Jinja):
-  - Overview with stat cards (customers, orders, revenue, average rating) and a
-    "top ordered items" chart.
-  - Searchable customer and order tables.
-  - Secure, CSRF-protected admin login with constant-time credential comparison
-    and hardened session cookies (`HttpOnly`, `SameSite=Lax`).
-  - Responsive layout with dark/light mode; empty and error states.
+- **Optional web layer** (`food_processing_system.web`, Flask + Jinja), structured
+  as two blueprints sharing the same services and database:
+  - **Customer app** (`/`): landing page, registration, login, customer dashboard,
+    place order, "my orders", and a star-rating page — the full CLI flow in the browser.
+  - **Admin dashboard** (`/admin`): stat cards (customers, orders, revenue, average
+    rating), a "top ordered items" chart, and searchable customer & order tables.
+  - Secure auth for both: CSRF-protected forms, constant-time credential checks,
+    hardened session cookies (`HttpOnly`, `SameSite=Lax`); separate admin/customer
+    sessions.
+  - Shared Jinja layouts (`shell` for authenticated pages, `plain` for public pages),
+    responsive design, dark/light mode, and empty/error states.
   - Reuses the existing service/repository layers — no business logic duplicated.
 - `food-processing-dashboard` console script and `python -m food_processing_system.web`.
 - `web` install extra (`pip install -e ".[web]"`) and web configuration in
   `config.WebConfig` / `.env.example`.
-- Six web tests (`tests/test_web.py`) covering auth, CSRF and page rendering.
+- `CustomerService.get`, `OrderService.orders_for_account` service methods.
+- Web tests (`tests/test_web.py`) covering admin auth/CSRF and the full customer
+  register → login → order → view → rate flow (35 tests total).
 
 ## [1.0.0] - 2026-06-10
 

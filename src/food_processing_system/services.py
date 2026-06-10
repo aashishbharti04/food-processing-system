@@ -121,6 +121,10 @@ class CustomerService:
             raise ValidationError("Account not found.")
         self._customers.update_details(account_no, name, address)
 
+    def get(self, account_no: int) -> Customer | None:
+        """Return a customer by account number, or ``None`` if not found."""
+        return self._customers.get(account_no)
+
     def all_customers(self) -> list[Customer]:
         """Return every registered customer."""
         return self._customers.list_all()
@@ -168,6 +172,10 @@ class OrderService:
     def all_orders(self) -> list[Order]:
         """Return every order placed."""
         return self._orders.list_all()
+
+    def orders_for_account(self, account_no: int) -> list[Order]:
+        """Return the orders belonging to a single account."""
+        return self._orders.list_for_account(account_no)
 
     def order_count(self) -> int:
         """Return the total number of orders."""
